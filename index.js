@@ -56,7 +56,7 @@ app.post('/upload', upload, function(req, res, next) {
                 }
                 console.log(stdout);
             });
-             *//
+             */
         });
     });
 
