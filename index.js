@@ -36,9 +36,10 @@ app.get('/upload-debug', function(req, res) {
 
 app.post('/upload', upload, function(req, res, next) {
     var username = req.body.username;
-    console.log(req.file);
+    var now = new Date();
     var tmpPath = req.file.path;
-    var targetPath = './uploads/' + username + '/' + (new Date()).getTime() + '-' + req.file.originalname;
+    var targetPath = './uploads/' + username + '/' + now.getTime() + '-' + req.file.originalname;
+    var convertedPath = './uploads/' + username + '/' + 'converted-' + now.getTime() + '-' + req.file.originalname;
     mkdirp('./uploads/' + username, function(err, result) {
         if (err) {
             throw err;
@@ -49,14 +50,12 @@ app.post('/upload', upload, function(req, res, next) {
             }
             res.send("File uploaded to " + targetPath);
 
-            /**
-            child = child_process.execFile('python', ['./converter/saveload.py', targetPath, targetPath + '.converted'], function(err, stdout, stderr) {
+            child = child_process.execFile('python', ['./converter/saveload.py', targetPath, convertedPath], function(err, stdout, stderr) {
                 if (err) {
                     throw err;
                 }
                 console.log(stdout);
             });
-             */
         });
     });
 
