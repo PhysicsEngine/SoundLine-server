@@ -1,4 +1,5 @@
 var fs = require('fs');
+var child_process = require('child_process');
 
 var express = require('express');
 var morgan = require('morgan');
@@ -8,7 +9,10 @@ var pg = require('pg');
 var app = express();
 
 var upload = multer({
-    dest: './uploads/'
+    dest: './uploads/',
+    limits: {
+        fieldSize: '10MB'
+    }
 });
 
 app.set('port', (process.env.PORT || 5000));
@@ -42,6 +46,15 @@ app.post('/upload', upload.single('file'), function(req, res, next) {
                 throw err;
             }
             res.send("File uploaded to " + targetPath);
+
+            /**
+            child = child_process.execFile('python', ['./converter/saveload.py', targetPath, targetPath + '.converted'], function(err, stdout, stderr) {
+                if (err) {
+                    throw err;
+                }
+                console.log(stdout);
+            });
+             */
         });
     });
 
