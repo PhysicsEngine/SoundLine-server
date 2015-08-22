@@ -40,6 +40,14 @@ app.get('/converted/:filename', function(req, res, next) {
     res.download('./uploads/' + filename);
 });
 
+app.get('/list', function(req, res, next) {
+    fs.readdir('./uploads', function(err, list) {
+        var ret = {};
+        ret['list'] = list;
+        res.json(ret);
+    });
+});
+
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
