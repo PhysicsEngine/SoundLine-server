@@ -39,7 +39,7 @@ app.post('/upload', upload, function(req, res, next) {
     var now = new Date();
     var tmpPath = req.file.path;
     var targetPath = './uploads/' + username + '/' + now.getTime() + '-' + req.file.originalname;
-    var convertedPath = './uploads/' + username + '/' + 'converted-' + now.getTime() + '-' + req.file.originalname;
+    var convertedPath = './uploads/' + username + '/' + 'converted-' + now.getTime() + '-' + req.file.originalname + '.mp3';
     mkdirp('./uploads/' + username, function(err, result) {
         if (err) {
             throw err;
