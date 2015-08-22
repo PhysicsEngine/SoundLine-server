@@ -42,6 +42,7 @@ app.get('/converted/:filename', function(req, res, next) {
 
 app.get('/list', function(req, res, next) {
     fs.readdir('./uploads', function(err, list) {
+        console.log(list);
         var ret = {};
         ret['list'] = list;
         res.json(ret);
