@@ -19,3 +19,6 @@ class Vocaloid(object):
                 continue 
             else:
                 return str(k)
+
+        ## for max
+        return str(len(self.noteNumList))
