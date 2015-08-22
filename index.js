@@ -1,14 +1,21 @@
 var fs = require('fs');
 
 var express = require('express');
+var morgan = require('morgan');
 var multer = require('multer');
+var bodyParser = require('body-parser');
+var pg = require('pg');
 var app = express();
 
-var upload = multer({dest: './uploads/'});
+var upload = multer({
+    dest: './uploads/'
+});
 
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
+app.use(morgan('dev', {immediate: true}));
+app.use(bodyParser.urlencoded({extended: false}));
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
@@ -23,29 +30,57 @@ app.get('/upload-debug', function(req, res) {
 });
 
 app.post('/upload', upload.single('file'), function(req, res, next) {
+    var username = req.body.username;
     var tmpPath = req.file.path;
-    var targetPath = './uploads/' + req.file.originalname;
-    console.log(tmpPath);
-    fs.rename(tmpPath, targetPath, function(err) {
+    var targetPath = './uploads/' + username + '/' + req.file.originalname;
+    fs.mkdir('./uploads/' + username, function(err, result) {
         if (err) {
             throw err;
         }
-        res.send("File uploaded to " + targetPath);
+        fs.rename(tmpPath, targetPath, function(err) {
+            if (err) {
+                throw err;
+            }
+            res.send("File uploaded to " + targetPath);
+        });
     });
+
+    /**
+    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+        client.query('INSERT INTO converted VALUES ("' + username + '","' + targetPath + '"', function(err, result) {
+            fs.rename(tmpPath, targetPath, function(err) {
+                if (err) {
+                    throw err;
+                }
+                res.send("File uploaded to " + targetPath);
+            });
+        });
+    });
+     */
 });
 
-app.get('/converted/:filename', function(req, res, next) {
+app.get('/converted/:username/:filename', function(req, res, next) {
     var filename = req.params.filename;
+    var username = req.params.username;
     console.log("Download " + filename);
-    res.download('./uploads/' + filename);
+    res.download('./uploads/' + username + '/' + filename);
 });
 
 app.get('/list', function(req, res, next) {
-    fs.readdir('./uploads', function(err, list) {
-        console.log(list);
+    fs.readdir('./uploads', function(err, users) {
         var ret = {};
-        ret['list'] = list;
-        res.json(ret);
+        for (var i = 0; i < users.length; i++) {
+            var userDir = fs.statSync('./uploads/' + users[i]);
+            if (userDir.isDirectory()) {
+                var username = users[i];
+                ret[username] = [];
+                var filenames = fs.readdirSync('./uploads/' + users[i]);
+                for (var j = 0; j < filenames.length; j++) {
+                    ret[username].push(filenames[j]);
+                }
+            }
+        }
+        res.json({users: ret});
     });
 });
 
