@@ -31,10 +31,8 @@ class NetVocaloidRequestLib(object):
 
         try:
             ticketId = e.find('ticketId').text
-            print ticketId
-            retryAfter = e.find('retryAfter').text
         
-            return ticketId, retryAfter
+            return ticketId
         except Exception as e:
             raise NetVocaloidRequestException(e)
 
@@ -53,7 +51,7 @@ class NetVocaloidRequestLib(object):
             elif status == 'working':
                 return False
             else:
-                raise NetVocaloidRequestException('create vocal has error')
+                raise NetVocaloidRequestException(e.find('message').text)
         except Exception as e:
             raise NetVocaloidRequestException(e)
 
@@ -64,7 +62,6 @@ class NetVocaloidRequestLib(object):
         params['ope'] = 'query'
         try:
             r = requests.get(cls.getUrl(), params=params)
-            print r.text
             e = ElementTree.fromstring(r.text)
             status = e.find('status').text
             if status != 'done':
@@ -74,9 +71,10 @@ class NetVocaloidRequestLib(object):
             params['ope'] = 'done'
             r = requests.get(cls.getUrl(), params=params)
             status = e.find('status').text
-            
-            if status != 'ok':
+            if status != 'done':
                 raise NetVocaloidRequestException('download vocal file error')
+            else:
+                print 'download succeed'
         except Exception as e:
             raise NetVocaloidRequestException(e)
 
@@ -85,5 +83,10 @@ class NetVocaloidRequestException(BaseException):
     pass
 
     
-id =  NetVocaloidRequestLib.startCreateVocal('test.xml')
-print id
+if __name__ == "__main__":
+    import time
+    id = NetVocaloidRequestLib.startCreateVocal('test.xml')
+    while (NetVocaloidRequestLib.isDoneCreateVocal(id) is False):
+        print 'createing'
+        time.sleep(3)
+    NetVocaloidRequestLib.downloadVocalFile(id, "tmp.mp3")
