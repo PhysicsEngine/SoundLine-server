@@ -1,0 +1,28 @@
+{
+  "name": "SoundLine",
+  "version": "0.0.1",
+  "description": "SoundLine web api server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "ejs": "^2.3.1",
+    "express": "~4.9.x",
+    "multer": "^1.0.3"
+  },
+  "engines": {
+    "node": "0.12.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PhysicsEngine/SoundLine-server"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "license": "MIT"
+}
