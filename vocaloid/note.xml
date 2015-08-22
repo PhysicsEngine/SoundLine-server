@@ -1,0 +1,31 @@
+<note>
+    <posTick>{0}</posTick>
+    <durTick>{1}</durTick>
+    <noteNum>{2}</noteNum>
+	<velocity>64</velocity>
+	<lyric><![CDATA[ค้]]></lyric>
+	<phnms><![CDATA[4 a]]></phnms>
+	<noteStyle>
+		<attr id="accent">50</attr>
+		<attr id="bendDep">8</attr>
+		<attr id="bendLen">0</attr>
+		<attr id="decay">50</attr>
+		<attr id="fallPort">0</attr>
+		<attr id="opening">127</attr>
+		<attr id="risePort">0</attr>
+		<attr id="vibLen">66</attr>
+		<attr id="vibType">1</attr>
+		<seqAttr id="vibDep">
+			<elem>
+				<posNrm>22391</posNrm>
+				<elv>64</elv>
+			</elem>
+		</seqAttr>
+		<seqAttr id="vibRate">
+			<elem>
+				<posNrm>22391</posNrm>
+				<elv>50</elv>
+			</elem>
+		</seqAttr>
+	</noteStyle>
+</note>
