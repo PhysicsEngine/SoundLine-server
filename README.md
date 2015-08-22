@@ -1,6 +1,6 @@
-# node-js-getting-started
+# SoundLine API Server
 
-A barebones Node.js app using [Express 4](http://expressjs.com/).
+A barebones Node.js app using [Express 4](http://expressjs.com/). This is created for [Music Hack Day Tokyo 2015](http://www.musichackday-tokyo.org/).
 
 This application supports the [Getting Started with Node on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs) article - check it out.
 
@@ -9,8 +9,8 @@ This application supports the [Getting Started with Node on Heroku](https://devc
 Make sure you have [Node.js](http://nodejs.org/) and the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
 
 ```sh
-$ git clone git@github.com:heroku/node-js-getting-started.git # or clone your own fork
-$ cd node-js-getting-started
+$ git clone git@github.com:PhysicsEngine/SoundLine-server
+$ cd SoundLine-server
 $ npm install
 $ npm start
 ```
