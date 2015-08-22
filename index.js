@@ -55,6 +55,11 @@ app.post('/upload', upload, function(req, res, next) {
                     throw err;
                 }
                 console.log(stdout);
+                fs.unlink(targetPath, function(err) {
+                    if (err) {
+                        throw err;
+                    }
+                });
             });
         });
     });
