@@ -68,15 +68,14 @@ app.get('/converted/:username/:filename', function(req, res, next) {
 
 app.get('/list', function(req, res, next) {
     fs.readdir('./uploads', function(err, users) {
-        var ret = {};
+        var ret = [];
         for (var i = 0; i < users.length; i++) {
             var userDir = fs.statSync('./uploads/' + users[i]);
             if (userDir.isDirectory()) {
                 var username = users[i];
-                ret[username] = [];
                 var filenames = fs.readdirSync('./uploads/' + users[i]);
                 for (var j = 0; j < filenames.length; j++) {
-                    ret[username].push(filenames[j]);
+                    ret.push({user: username, filename: filenames[j]});
                 }
             }
         }
