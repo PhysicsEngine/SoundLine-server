@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 class VsqxLib(object):
-    NOTE_XML = """<!-- note start -->
+    NOTE_XML = """
 <note>
     <posTick>{0}</posTick>
     <durTick>{1}</durTick>
     <noteNum>{2}</noteNum>
         <velocity>64</velocity>
-        <lyric><![CDATA[‚ç]]></lyric>
-        <phnms><![CDATA[4 a]]></phnms>
+        <lyric><![CDATA[ã‚‰]]></lyric>
+	<phnms><![CDATA[4 a]]></phnms>
         <noteStyle>
                 <attr id="accent">50</attr>
                 <attr id="bendDep">8</attr>
@@ -32,9 +32,9 @@ class VsqxLib(object):
                 </seqAttr>
         </noteStyle>
 </note>
-<!-- note end -->"""
+"""
 
-    VSQX_XML = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    VSQX_XML = u"""<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <vsq3 xmlns="http://www.yamaha.co.jp/vocaloid/schema/vsq3/"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.yamaha.co.jp/vocaloid/schema/vsq3/ vsq3.xsd">
@@ -145,11 +145,12 @@ class VsqxLib(object):
 
     @classmethod
     def createNote(cls, posTick, durTick, noteNum):
-        return cls.NOTE_XML.format(posTick, durTick, noteNum)
+        xml = unicode(cls.NOTE_XML, 'utf-8')
+        return xml.format(posTick, durTick, noteNum)
 
     @classmethod
     def createVsqx(cls, notes):
-        return cls.VSQX_XML.format("\n".join(notes))
+        return cls.VSQX_XML.format("\n".join(notes)).encode('utf-8')
 
 notes = [VsqxLib.createNote(1, 2, 3), VsqxLib.createNote(3, 4, 5)]
 print VsqxLib.createVsqx(notes)
