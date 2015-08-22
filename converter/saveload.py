@@ -6,7 +6,7 @@ import subprocess as sp
 import numpy
 import pydub
 
-def load_mp3(filename):
+def load(filename):
 	command = [ 'ffmpeg',
 	'-i', filename,
 	'-f', 's16le',
@@ -23,7 +23,7 @@ def load_mp3(filename):
 	
 	return audio_array
 
-def save_mp3(filename,audio_array):
+def save(filename,audio_array):
 	pipe2 = sp.Popen([ 'ffmpeg',
 	'-y', # (optional) means overwrite the output file if it already exists.
 	"-f", 's16le', # means 16bit input
@@ -32,16 +32,16 @@ def save_mp3(filename,audio_array):
 	'-ac','2', # the input will have 2 channels (stereo)
 	'-i', '-', # means that the input will arrive from the pipe
 	'-vn', # means "don't expect any video input"
-	'-acodec', "mp3", # output audio codec
+#	'-acodec', "mp3", # output audio codec
 	'-b', "3000k", # output bitrate (=quality). Here, 3000kb/second
 	filename],
 	stdin=sp.PIPE,stdout=sp.PIPE, stderr=sp.PIPE)
 	audio_array.astype("int16").tofile(pipe2.stdin)
 
 def main():
-	ary = load_mp3(sys.argv[1])
+	ary = load(sys.argv[1])
 	ary = ary.reshape((ary.shape[0]*2,1))
-	save_mp3(sys.argv[2],ary)
+	save(sys.argv[2],ary)
 
 if __name__ == '__main__':
 	main()
