@@ -6,6 +6,7 @@ var morgan = require('morgan');
 var multer = require('multer');
 var bodyParser = require('body-parser');
 var pg = require('pg');
+var mkdirp = require('mkdirp');
 var app = express();
 
 var upload = multer({
@@ -13,7 +14,7 @@ var upload = multer({
     limits: {
         fieldSize: '10MB'
     }
-});
+}).single('file');
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -33,11 +34,12 @@ app.get('/upload-debug', function(req, res) {
     res.render('pages/upload-debug');
 });
 
-app.post('/upload', upload.single('file'), function(req, res, next) {
+app.post('/upload', upload, function(req, res, next) {
     var username = req.body.username;
+    console.log(req.file);
     var tmpPath = req.file.path;
     var targetPath = './uploads/' + username + '/' + req.file.originalname;
-    fs.mkdir('./uploads/' + username, function(err, result) {
+    mkdirp('./uploads/' + username, function(err, result) {
         if (err) {
             throw err;
         }
@@ -54,7 +56,7 @@ app.post('/upload', upload.single('file'), function(req, res, next) {
                 }
                 console.log(stdout);
             });
-             */
+             *//
         });
     });
 
