@@ -107,8 +107,8 @@ class VsqxLib(object):
 		<trackName><![CDATA[Track]]></trackName>
 		<comment><![CDATA[Track]]></comment>
 		<musicalPart>
-			<posTick>1920</posTick>
-			<playTime>61440</playTime>
+			<posTick>0</posTick>
+			<playTime>11520</playTime>
 			<partName><![CDATA[NewPart]]></partName>
 			<comment><![CDATA[New Musical Part]]></comment>
 			<stylePlugin>
