@@ -59,7 +59,7 @@ class VsqxLib(object):
 		<masterUnit>
 			<outDev>0</outDev>
 			<retLevel>0</retLevel>
-			<vol>0</vol>
+			<vol>3</vol>
 		</masterUnit>
 		<vsUnit>
 			<vsTrackNo>0</vsTrackNo>
