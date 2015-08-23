@@ -93,6 +93,11 @@ function compareUserTime(u1, u2) {
     return 0;
 }
 
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+
+};
+
 app.get('/list', function(req, res, next) {
     fs.readdir('./uploads', function(err, users) {
         var ret = [];
@@ -102,7 +107,9 @@ app.get('/list', function(req, res, next) {
                 var username = users[i];
                 var filenames = fs.readdirSync('./uploads/' + users[i]);
                 for (var j = 0; j < filenames.length; j++) {
-                    ret.push({user: username, filename: filenames[j]});
+                    if (!filenames[j].endsWith("xml")) {
+                        ret.push({user: username, filename: filenames[j]});
+                    }
                 }
             }
         }
