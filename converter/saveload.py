@@ -19,7 +19,6 @@ def load(filename):
 	# Reorganize raw_audio as a Numpy array with two-columns (1 per channel)
 
 	audio_array = numpy.fromstring(out, dtype="int16")
-	audio_array = audio_array.reshape((audio_array.shape[0]/2,2))
 	
 	return audio_array
 
@@ -40,7 +39,6 @@ def save(filename,audio_array):
 
 def main():
 	ary = load(sys.argv[1])
-	ary = ary.reshape((ary.shape[0]*2,1))
 	save(sys.argv[2],ary)
 
 if __name__ == '__main__':
