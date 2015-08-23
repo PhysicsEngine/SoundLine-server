@@ -12,23 +12,24 @@ from vocaloid import scale
 from vocaloid import vsqx_lib
 from vocaloid import net_vocaloid_request_lib
 
-WIN_SIZE = 256
+WIN_SIZE = 512 
 SAMPLING_RATE = 44100
 
 def get_notes(raw_data,scale):
-	spectrums = fft.get_max_spectrums(raw_data,WIN_SIZE)
+	spectrums = fft.get_max_freqs(raw_data,WIN_SIZE)
 	print len(spectrums)
 	notes = []
 	length = 1
 	prev_note = 0
+	pos_tick = 1
 	for (i,spectrum) in enumerate(spectrums):
 		note = scale.convert(spectrum)
 		if prev_note == note:
 			length = length + 1
 		else:
-			pos_tick = WIN_SIZE*i/(2.0*SAMPLING_RATE)
-			dur_tick = scale.convert(WIN_SIZE*length/(2.0*SAMPLING_RATE))
+			dur_tick = scale.calcTick(length*0.25)
 			notes.append(vsqx_lib.VsqxLib.createNote(pos_tick,dur_tick,prev_note))
+			pos_tick = pos_tick + int(dur_tick)
 			length = 1
 			prev_note = note
 	return notes
@@ -52,6 +53,11 @@ def main():
 	note_xml_name = input_path + ".xml"
 	output_name = sys.argv[2]
 	scale_converter = scale.InocentScale()
+	if len(sys.argv) > 4:
+		if sys.argv[3] == "happy":
+			scale_converter = scale.CMajorScale()
+		elif sys.argv[3] == "sad":
+			scale_converter = scale.AminorScale()
 	raw_data    = saveload.load(input_name)
 	notes = get_notes(raw_data,scale_converter)
 	xml = create_note_xml(notes,note_xml_name)
