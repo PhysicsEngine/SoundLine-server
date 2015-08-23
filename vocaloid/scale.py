@@ -11,6 +11,10 @@ class BaseScale(object):
     @abstractmethod
     def convert(self, hertz):
         pass
+
+    @classmethod
+    def calcTick(cls, sec):
+        return 960
     
 class InocentScale(BaseScale):
     @classmethod
