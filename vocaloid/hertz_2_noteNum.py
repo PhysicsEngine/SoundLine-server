@@ -16,7 +16,7 @@ class BaseHertz2NoteNum(object):
     def convert(self, hertz):
         for hertzNoteNumMap in self.hertzNoteNumMapList:
             if hertz < self.HERTZ_MIN:
-                return '0'
+                return self.hertzNoteNumMapList[0].keys()[0]
 
             if hertz > hertzNoteNumMap.values()[0]:
                 continue 
