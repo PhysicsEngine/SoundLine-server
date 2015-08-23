@@ -12,17 +12,19 @@ from vocaloid import scale
 from vocaloid import vsqx_lib
 from vocaloid import net_vocaloid_request_lib
 
-WIN_SIZE = 512 
+WIN_SIZE = 1024 
 SAMPLING_RATE = 44100
 
 def get_notes(raw_data,scale):
-	spectrums = fft.get_max_freqs(raw_data,WIN_SIZE)
-	print len(spectrums)
+	print "get_notes"
+	spectrums = fft.get_max_spectrums(raw_data,WIN_SIZE)
+	freqs = fft.get_max_freqs(spectrums,WIN_SIZE)
+#	print spectrums
 	notes = []
 	length = 1
 	prev_note = 0
 	pos_tick = 1
-	for (i,spectrum) in enumerate(spectrums):
+	for (i,spectrum) in enumerate(freqs):
 		note = scale.convert(spectrum)
 		if prev_note == note:
 			length = length + 1
@@ -60,7 +62,7 @@ def main():
 			scale_converter = scale.AminorScale()
 	raw_data    = saveload.load(input_name)
 	notes = get_notes(raw_data,scale_converter)
-	xml = create_note_xml(notes,note_xml_name)
+	create_note_xml(notes,note_xml_name)
 	download_music(note_xml_name,output_name)
 #	saveload.save(output_name,raw_data)
 

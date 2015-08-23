@@ -26,9 +26,6 @@ def add_signal(signal, frame, winsize, no, dt = 0.25 ):
 	end=start+winsize
 	signal[start:end] = signal[start:end] + frame
 
-def get_max_freq(freq):
-	return np.argmax(abs(freq))
-
 def get_max_spectrums(signal,winsize):
 	nf = len(signal)/(winsize/2) - 1
 	max_spectrum = []
@@ -36,9 +33,9 @@ def get_max_spectrums(signal,winsize):
 	for no in xrange(nf):
 		y = get_frame(signal, winsize, no)
 		Y = np.fft.fft(y*hanning)
-		Y[winsize/2:] = 0
-		freq_max = np.argmax(abs(Y))*44100.0/(winsize**2)
-		print freq_max
+		Y[winsize/2:winsize] = 0
+		freq_max = int(np.argmax(abs(Y),axis=0)*44100.0/(winsize))
+#		print freq_max
 		max_spectrum.append(freq_max)
 	return max_spectrum
 
@@ -48,14 +45,18 @@ def get_max_hertz(spectrums):
 
 def get_max_freqs(spectrums,winsize,sampling_rate=44100,dt=0.25):
 	result = []
-	step = sampling_rate*dt/(winsize/2)
+	step = int(sampling_rate*dt/(winsize/2))
+	print step
 	tmp = []
 	for (i,spectrum) in enumerate(spectrums):
 		if i % step == 0 and i > 0 :
-			result.append(get_max_hertz(tmp))
+			max_hertz = get_max_hertz(tmp)
+			#print max_hertz
+			result.append(max_hertz[0][0])
 			tmp = []
 		else:
 			tmp.append(spectrum)
+	print result
 	return result
 
 def main():
