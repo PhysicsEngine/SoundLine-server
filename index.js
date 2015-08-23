@@ -58,7 +58,7 @@ app.post('/upload', upload, function(req, res, next) {
             res.send("File uploaded to " + targetPath);
 
             child = child_process.execFile('python',
-                ['./convert.py', targetPath, convertedPath],
+                ['./convert.py', targetPath, convertedPath, filter],
                 function(err, stdout, stderr) {
                 if (err) {
                     throw err;
@@ -81,6 +81,18 @@ app.get('/converted/:username/:filename', function(req, res, next) {
     res.download('./uploads/' + username + '/' + filename);
 });
 
+function compareUserTime(u1, u2) {
+    var pattern = /converted-([0-9]+)-.+\.mp3/;
+    var time1 = pattern.exec(u1.filename)[1];
+    var time2 = pattern.exec(u2.filename)[1];
+    if (time1 > time2) {
+        return -1;
+    } else {
+        return 1;
+    }
+    return 0;
+}
+
 app.get('/list', function(req, res, next) {
     fs.readdir('./uploads', function(err, users) {
         var ret = [];
@@ -94,6 +106,7 @@ app.get('/list', function(req, res, next) {
                 }
             }
         }
+        ret.sort(compareUserTime);
         res.json({users: ret});
     });
 });
