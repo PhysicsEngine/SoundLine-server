@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import csv
+import os
 
 class BaseHertz2NoteNum(object):
     HERTZ_MIN = 8.2
+    CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+
     def __init__(self, csvFile):
         with open(csvFile, mode='r') as inputFile:
             reader = csv.reader(inputFile)
@@ -25,9 +28,9 @@ class BaseHertz2NoteNum(object):
 
 class CMajorHertz2NoteNum(BaseHertz2NoteNum):
     def __init__(self):
-        BaseHertz2NoteNum.__init__(self, 'midi_note_cmajor.csv')
+        BaseHertz2NoteNum.__init__(self, '{0}/{1}'.format(self.CUR_DIR, 'midi_note_cmajor.csv'))
 
 class AMinorHertz2NoteNum(BaseHertz2NoteNum):
     def __init__(self):
-        BaseHertz2NoteNum.__init__(self, 'midi_note_aminor.csv')
+        BaseHertz2NoteNum.__init__(self, '{0}/{1}'.format(self.CUR_DIR, 'midi_note_aminor.csv'))
 
