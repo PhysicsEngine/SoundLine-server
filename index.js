@@ -9,6 +9,10 @@ var pg = require('pg');
 var mkdirp = require('mkdirp');
 var app = express();
 
+/**
+ *  File upload configuration of multer.
+ *  Targt dir is './uploads' and file limit size 10MB.
+ */
 var upload = multer({
     dest: './uploads/',
     limits: {
@@ -36,10 +40,13 @@ app.get('/upload-debug', function(req, res) {
 
 app.post('/upload', upload, function(req, res, next) {
     var username = req.body.username;
+    var filter = req.body.filter;
     var now = new Date();
     var tmpPath = req.file.path;
-    var targetPath = './uploads/' + username + '/' + now.getTime() + '-' + req.file.originalname;
-    var convertedPath = './uploads/' + username + '/' + 'converted-' + now.getTime() + '-' + req.file.originalname + '.mp3';
+    var targetPath = './uploads/' + username + '/' + now.getTime() +
+            '-' + req.file.originalname;
+    var convertedPath = './uploads/' + username + '/' + 'converted-' +
+            now.getTime() + '-' + req.file.originalname + '.mp3';
     mkdirp('./uploads/' + username, function(err, result) {
         if (err) {
             throw err;
@@ -50,7 +57,9 @@ app.post('/upload', upload, function(req, res, next) {
             }
             res.send("File uploaded to " + targetPath);
 
-            child = child_process.execFile('python', ['./converter/saveload.py', targetPath, convertedPath], function(err, stdout, stderr) {
+            child = child_process.execFile('python',
+                ['./convert.py', targetPath, convertedPath, filter],
+                function(err, stdout, stderr) {
                 if (err) {
                     throw err;
                 }
@@ -63,19 +72,6 @@ app.post('/upload', upload, function(req, res, next) {
             });
         });
     });
-
-    /**
-    pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-        client.query('INSERT INTO converted VALUES ("' + username + '","' + targetPath + '"', function(err, result) {
-            fs.rename(tmpPath, targetPath, function(err) {
-                if (err) {
-                    throw err;
-                }
-                res.send("File uploaded to " + targetPath);
-            });
-        });
-    });
-     */
 });
 
 app.get('/converted/:username/:filename', function(req, res, next) {
@@ -84,6 +80,18 @@ app.get('/converted/:username/:filename', function(req, res, next) {
     console.log("Download " + filename);
     res.download('./uploads/' + username + '/' + filename);
 });
+
+function compareUserTime(u1, u2) {
+    var pattern = /converted-([0-9]+)-.+\.mp3/;
+    var time1 = pattern.exec(u1.filename)[1];
+    var time2 = pattern.exec(u2.filename)[1];
+    if (time1 > time2) {
+        return -1;
+    } else {
+        return 1;
+    }
+    return 0;
+}
 
 app.get('/list', function(req, res, next) {
     fs.readdir('./uploads', function(err, users) {
@@ -98,6 +106,7 @@ app.get('/list', function(req, res, next) {
                 }
             }
         }
+        ret.sort(compareUserTime);
         res.json({users: ret});
     });
 });
