@@ -28,4 +28,4 @@ node_modules
 
 ## Ignore generated directory when server is running.
 uploads
-
+*.pyc

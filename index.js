@@ -83,14 +83,24 @@ app.get('/converted/:username/:filename', function(req, res, next) {
 
 function compareUserTime(u1, u2) {
     var pattern = /converted-([0-9]+)-.+\.mp3/;
-    var time1 = pattern.exec(u1.filename)[1];
-    var time2 = pattern.exec(u2.filename)[1];
-    if (time1 > time2) {
-        return -1;
-    } else {
-        return 1;
+    var time1 = pattern.exec(u1.filename);
+    var time2 = pattern.exec(u2.filename);
+    if (time1 != null && time2 != null) {
+        if (time1[1] > time2[1]) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
     return 0;
+}
+
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
+
+String.prototype.startsWith = function(prefix) {
+    return this.indexOf(prefix) === 0;
 }
 
 app.get('/list', function(req, res, next) {
@@ -102,7 +112,9 @@ app.get('/list', function(req, res, next) {
                 var username = users[i];
                 var filenames = fs.readdirSync('./uploads/' + users[i]);
                 for (var j = 0; j < filenames.length; j++) {
-                    ret.push({user: username, filename: filenames[j]});
+                    if (!filenames[j].endsWith("xml") && filenames[j].startsWith("converted")) {
+                        ret.push({user: username, filename: filenames[j]});
+                    }
                 }
             }
         }
