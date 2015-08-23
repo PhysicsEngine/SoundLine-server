@@ -1,25 +1,33 @@
 # -*- coding: utf-8 -*-
 import csv
 
-class Hertz2NoteNumConverter(object):
+class BaseHertz2NoteNum(object):
     HERTZ_MIN = 8.2
-    def __init__(self):
-        with open('noteNum_hertz.csv', mode='r') as input_file:
-            reader = csv.reader(input_file)
-            self.noteNumList = []
+    def __init__(self, csvFile):
+        with open(csvFile, mode='r') as inputFile:
+            reader = csv.reader(inputFile)
+            self.hertzNoteNumMapList = []
             for rows in reader:
-                self.noteNumList.append(float(rows[1]))
+                self.hertzNoteNumMapList.append({rows[1]: float(rows[2])})
 
-    def execute(self, hertz):
-        for k, v in enumerate(self.noteNumList):
+    def convert(self, hertz):
+        for hertzNoteNumMap in self.hertzNoteNumMapList:
             if hertz < self.HERTZ_MIN:
                 return '0'
 
-            if hertz > v:
+            if hertz > hertzNoteNumMap.values()[0]:
                 continue 
             else:
-                return str(k)
+                return hertzNoteNumMap.keys()[0]
 
         ## for max
-        return str(len(self.noteNumList))
+        return self.hertzNoteNumMapList[-1].keys()[0]
+
+class CMajorHertz2NoteNum(BaseHertz2NoteNum):
+    def __init__(self):
+        BaseHertz2NoteNum.__init__(self, 'midi_note_cmajor.csv')
+
+class AMinorHertz2NoteNum(BaseHertz2NoteNum):
+    def __init__(self):
+        BaseHertz2NoteNum.__init__(self, 'midi_note_aminor.csv')
 
