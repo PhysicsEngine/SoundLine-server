@@ -21,19 +21,20 @@ def get_notes(raw_data,scale):
 	freqs = fft.get_max_freqs(spectrums,WIN_SIZE)
 #	print spectrums
 	notes = []
-	length = 1
-	prev_note = 0
+	length = 1 
+	prev_note = scale.convert(0)
 	pos_tick = 1
 	for (i,spectrum) in enumerate(freqs):
 		note = scale.convert(spectrum)
-		if prev_note == note:
+		if prev_note == note :
 			length = length + 1
 		else:
-			dur_tick = scale.calcTick(length*0.25)
+			dur_tick = scale.calcTick(length * 0.25)
 			notes.append(vsqx_lib.VsqxLib.createNote(pos_tick,dur_tick,prev_note))
 			pos_tick = pos_tick + int(dur_tick)
 			length = 1
 			prev_note = note
+	print len(note),"note length"
 	return notes
 
 def create_note_xml(notes,note_xml_name):

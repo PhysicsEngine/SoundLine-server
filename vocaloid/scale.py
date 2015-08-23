@@ -12,8 +12,7 @@ class BaseScale(object):
 
     @classmethod
     def calcTick(cls, sec):
-        print 'sec={0}'.format(str(sec))
-        return int(240 * sec)
+        return int(480 * sec)
     
 class InocentScale(BaseScale):
     def __init__(self):

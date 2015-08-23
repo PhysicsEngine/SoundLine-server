@@ -146,6 +146,7 @@ class VsqxLib(object):
     @classmethod
     def createNote(cls, posTick, durTick, noteNum):
         xml = unicode(cls.NOTE_XML, 'utf-8')
+        print "posTic={0}, durTick={1}, noteNum={2}".format(posTick, durTick, noteNum)
         return xml.format(posTick, durTick, noteNum)
 
     @classmethod
