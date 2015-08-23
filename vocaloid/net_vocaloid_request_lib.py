@@ -31,7 +31,7 @@ class NetVocaloidRequestLib(object):
 
         try:
             ticketId = e.find('ticketId').text
-        
+            print ticketId        
             return ticketId
         except Exception as e:
             raise NetVocaloidRequestException(e)

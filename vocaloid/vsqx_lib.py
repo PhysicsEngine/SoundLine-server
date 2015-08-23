@@ -107,8 +107,8 @@ class VsqxLib(object):
 		<trackName><![CDATA[Track]]></trackName>
 		<comment><![CDATA[Track]]></comment>
 		<musicalPart>
-			<posTick>0</posTick>
-			<playTime>11520</playTime>
+			<posTick>1920</posTick>
+			<playTime>5760</playTime>
 			<partName><![CDATA[NewPart]]></partName>
 			<comment><![CDATA[New Musical Part]]></comment>
 			<stylePlugin>
@@ -152,5 +152,5 @@ class VsqxLib(object):
     def createVsqx(cls, notes):
         return cls.VSQX_XML.format("\n".join(notes)).encode('utf-8')
 
-notes = [VsqxLib.createNote(1, 2, 3), VsqxLib.createNote(3, 4, 5)]
+notes = [VsqxLib.createNote(0, 960, 60), VsqxLib.createNote(961, 960, 61), VsqxLib.createNote(961 * 2, 960 * 2, 70)]
 print VsqxLib.createVsqx(notes)

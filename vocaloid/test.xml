@@ -71,8 +71,8 @@
 		<trackName><![CDATA[Track]]></trackName>
 		<comment><![CDATA[Track]]></comment>
 		<musicalPart>
-			<posTick>0</posTick>
-			<playTime>11520</playTime>
+			<posTick>1920</posTick>
+			<playTime>5760</playTime>
 			<partName><![CDATA[NewPart]]></partName>
 			<comment><![CDATA[New Musical Part]]></comment>
 			<stylePlugin>
