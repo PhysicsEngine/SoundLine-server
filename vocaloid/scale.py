@@ -18,7 +18,7 @@ class InocentScale(BaseScale):
         return cls.converter.execute(hertz)
 
 class CmajorScale(BaseScale):
-    pass
+    usableNoteNums = []
 
 class AminorScale(BaseScale):
     pass
