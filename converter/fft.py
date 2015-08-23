@@ -3,8 +3,10 @@
 
 import numpy as np 
 import math
+from collections import Counter
 
 WINSIZE=256
+SAMPLING_RATE=44100
 
 def make_hanning(win_size):
 	hanning= np.zeros(win_size)
@@ -18,11 +20,14 @@ def get_frame(signal, winsize, no):
 	end = start+winsize
 	return signal[start:end]
 
-def add_signal(signal, frame, winsize, no ):
+def add_signal(signal, frame, winsize, no, dt = 0.25 ):
 	shift=winsize/2
 	start=no*shift
 	end=start+winsize
 	signal[start:end] = signal[start:end] + frame
+
+def get_max_freq(freq):
+	return np.argmax(abs(freq))
 
 def get_max_spectrums(signal,winsize):
 	nf = len(signal)/(winsize/2) - 1
@@ -31,21 +36,27 @@ def get_max_spectrums(signal,winsize):
 	for no in xrange(nf):
 		y = get_frame(signal, winsize, no)
 		Y = np.fft.fft(y*hanning)
-		freq_max = np.argmax(abs(Y))
+		Y[winsize/2:] = 0
+		freq_max = np.argmax(abs(Y))*44100.0/(winsize**2)
+		print freq_max
 		max_spectrum.append(freq_max)
 	return max_spectrum
 
-#signal = read_signal(wave_array,WINSIZE)
-#nf = len(signal)/(WINSIZE/2) - 1
-#sig_out=sp.zeros(len(signal),sp.float32)
-#window = sp.hanning(WINSIZE)
+def get_max_hertz(spectrums):
+	data = Counter(spectrums)
+	return data.most_common(1)
 
-#for no in xrange(nf):
-#    y = get_frame(signal, WINSIZE, no)
-#    Y = sp.fft(y*window)
-#    # Y = G * Y # 何らかのフィルタ処理
-#    y_o = sp.real(sp.ifft(Y))
-#    add_signal(sig_out, y_o, WINSIZE, no)
+def get_max_freqs(spectrums,winsize,sampling_rate=44100,dt=0.25):
+	result = []
+	step = sampling_rate*dt/(winsize/2)
+	tmp = []
+	for (i,spectrum) in enumerate(spectrums):
+		if i % step == 0 and i > 0 :
+			result.append(get_max_hertz(tmp))
+			tmp = []
+		else:
+			tmp.append(spectrum)
+	return result
 
 def main():
 	import saveload
